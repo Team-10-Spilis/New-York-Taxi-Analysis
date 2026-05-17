@@ -115,5 +115,5 @@ def audit_taxi_anomalies(dataframe):
     print(f"Аудит завершен.")
 
 
-df2 = pd.read_parquet('my_clean_2.parquet')
+df2 = pd.read_parquet('datasets/my_clean_2.parquet')
 audit_taxi_anomalies(df2)
