@@ -3,7 +3,7 @@ import pyarrow.parquet as pq
 
 
 ROWS_LIMIT = 100000
-FILE_NAME = "final_sample.parquet"
+FILE_NAME = "my_clean_3_with_weather.parquet"
 
 script_dir = Path(__file__).resolve().parent
 input_path = script_dir / FILE_NAME
