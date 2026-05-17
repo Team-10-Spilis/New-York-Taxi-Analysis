@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.env
+*.log
+datasets/my_clean_2.parquet
+datasets/my_clean_3_with_weather.parquet
+datasets/final_sample.parquet
