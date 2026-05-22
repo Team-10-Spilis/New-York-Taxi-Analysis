@@ -19,7 +19,7 @@ def load_data():
         'passenger_count', 'fare_amount'
     ]
     
-    df = pd.read_parquet("data.parquet", columns=used_cols)
+    df = pd.read_parquet("my_clean_3_with_weather.parquet", columns=used_cols) # Надо менять название файла
     
     df['tpep_pickup_datetime'] = pd.to_datetime(df['tpep_pickup_datetime'])
     df['pickup_hour'] = df['tpep_pickup_datetime'].dt.hour
@@ -246,7 +246,7 @@ with tab3:
             top_trips['route'] = top_trips['PU_Zone'] + " ➡️ " + top_trips['DO_Zone']
             fig1 = px.bar(top_trips, x='trip_count', y='route', orientation='h', title="Самые частые маршруты")
             fig1.update_layout(yaxis={'categoryorder':'total ascending'})
-            st.plotly_chart(fig1, use_container_width=True)
+            st.plotly_chart(fig1, width="stretch")
 
     with col2:
         popular_routes = map_data[map_data['trip_count'] > 5]
@@ -255,7 +255,7 @@ with tab3:
             top_revenue['route'] = top_revenue['PU_Zone'] + " ➡️ " + top_revenue['DO_Zone']
             fig2 = px.bar(top_revenue, x='avg_fare', y='route', orientation='h', title="Самый высокий средний чек ($)", color_discrete_sequence=['#2ca02c'])
             fig2.update_layout(yaxis={'categoryorder':'total ascending'})
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")
             
     col3, col4 = st.columns(2)
     with col3:
@@ -270,12 +270,12 @@ with tab3:
             color_continuous_scale="Reds"
         )
         fig_heat.update_yaxes(categoryorder='category descending') 
-        st.plotly_chart(fig_heat, use_container_width=True)
+        st.plotly_chart(fig_heat, width="stretch")
 
     with col4:
         hourly_demand = filtered_data.groupby('pickup_hour').size().reset_index(name='trips')
         fig3 = px.line(hourly_demand, x='pickup_hour', y='trips', markers=True, title="Общий спрос по часам (Загруженность)", labels={'pickup_hour': 'Час дня', 'trips': 'Поездок'})
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
 
     col5, col6 = st.columns(2)
     with col5:
@@ -292,13 +292,13 @@ with tab3:
             labels={'PU_Borough': 'Район', 'fare_per_mile': '$ за милю'},
             color='fare_per_mile', color_continuous_scale="Greens"
         )
-        st.plotly_chart(fig_fpm, use_container_width=True)
+        st.plotly_chart(fig_fpm, width="stretch")
 
     with col6:
         sample_size = min(2000, len(filtered_data))
         scatter_sample = filtered_data.sample(sample_size) if not filtered_data.empty else filtered_data
         fig4 = px.scatter(scatter_sample, x='trip_distance', y='fare_amount', color='PU_Borough', title="Стоимость vs Дистанция (Выборка 2000 поездок)", labels={'trip_distance': 'Дистанция (миль)', 'fare_amount': 'Тариф ($)'}, opacity=0.6)
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
     col7, col8 = st.columns(2)
     with col7:
@@ -311,7 +311,7 @@ with tab3:
             pass_df, values='Количество', names='Пассажиры', hole=0.4,
             title="Структура поездок по числу пассажиров"
         )
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width="stretch")
 
     with col8:
         max_dist = min(25, filtered_data['trip_distance'].max()) 
@@ -325,7 +325,7 @@ with tab3:
             title="Какую дистанцию чаще всего ездят?",
             color_discrete_sequence=['#1f77b4']
         )
-        st.plotly_chart(fig_hist, use_container_width=True)
+        st.plotly_chart(fig_hist, width="stretch")
 
 # =========== ВКЛАДКА 4: СЫРЫЕ ДАННЫЕ ===========
 with tab4:
