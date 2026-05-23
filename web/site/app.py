@@ -78,8 +78,8 @@ st.sidebar.header("Фильтры поездок")
 
 hour_range = st.sidebar.slider("Час посадки", 0, 23, (0, 23))
 all_boroughs = sorted(data['PU_Borough'].dropna().unique())
-selected_pu_boroughs = st.sidebar.multiselect("Район въезда (Откуда)", all_boroughs, placeholder="Все районы")
-selected_do_boroughs = st.sidebar.multiselect("Район выезда (Куда)", all_boroughs, placeholder="Все районы")
+selected_pu_boroughs = st.sidebar.multiselect("Район выезда (Откуда)", all_boroughs, placeholder="Все районы")
+selected_do_boroughs = st.sidebar.multiselect("Район въезда (Куда)", all_boroughs, placeholder="Все районы")
 
 max_pass = int(data['passenger_count'].max()) if not data.empty and data['passenger_count'].max() > 0 else 1
 max_pass = max(1, max_pass)
