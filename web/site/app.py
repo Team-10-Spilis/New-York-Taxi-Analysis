@@ -116,20 +116,36 @@ borough_labels = pd.DataFrame([
     {"name": "STATEN ISLAND", "lon": -74.15, "lat": 40.58, "align": "middle", "base": "center"}
 ])
 
-# --- 2. БОКОВАЯ ПАНЕЛЬ: ФИЛЬТРЫ ---
-st.sidebar.header("Фильтры поездок")
+# --- 2. НАВИГАЦИЯ (УМНЫЕ ВКЛАДКИ) ---
+tabs = ["🗺️ 3D Карта потоков", "🌡️ Активность (Тепловая)", "📊 Бизнес-аналитика", "🗄️ Данные", "🧩 Кластеры зон"]
+selected_tab = st.radio("Навигация:", tabs, horizontal=True, label_visibility="collapsed")
 
-hour_range = st.sidebar.slider("Час посадки", 0, 23, (0, 23))
-all_boroughs = sorted(data['PU_Borough'].dropna().unique())
-selected_pu_boroughs = st.sidebar.multiselect("Район выезда (Откуда)", all_boroughs, placeholder="Все районы")
-selected_do_boroughs = st.sidebar.multiselect("Район въезда (Куда)", all_boroughs, placeholder="Все районы")
+# --- 3. БОКОВАЯ ПАНЕЛЬ И ФИЛЬТРЫ ---
+# Задаем значения "По умолчанию" (чтобы на других вкладках данные показывались целиком)
+max_pass = max(1, int(data['passenger_count'].max()) if not data.empty and data['passenger_count'].max() > 0 else 1)
 
-max_pass = int(data['passenger_count'].max()) if not data.empty and data['passenger_count'].max() > 0 else 1
-max_pass = max(1, max_pass)
-pass_range = st.sidebar.slider("Количество пассажиров", 1, max_pass, (1, max_pass))
+# ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: считаем лимиты по total_amount
+max_fare = max(1.0, float(data['total_amount'].quantile(0.99)) if not data.empty and data['total_amount'].max() > 0 else 10.0)
 
-if not data.empty and data['total_amount'].max() > 0:
-    max_fare = float(data['total_amount'].quantile(0.99))
+hour_range = (0, 23)
+selected_pu_boroughs = []
+selected_do_boroughs = []
+# ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: Пассажиры от 1
+pass_range = (1, max_pass)
+fare_range = (0.0, max_fare)
+
+# ОСНОВНАЯ ЛОГИКА СКРЫТИЯ САЙДБАРА
+if selected_tab == "🗺️ 3D Карта потоков":
+    st.sidebar.header("Фильтры потоков")
+    hour_range = st.sidebar.slider("Час посадки", 0, 23, (0, 23))
+    all_boroughs = sorted(data['PU_Borough'].dropna().unique())
+    selected_pu_boroughs = st.sidebar.multiselect("Район въезда (Откуда)", all_boroughs, placeholder="Все районы")
+    selected_do_boroughs = st.sidebar.multiselect("Район выезда (Куда)", all_boroughs, placeholder="Все районы")
+    
+    # ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: Пассажиры от 1
+    pass_range = st.sidebar.slider("Количество пассажиров", 1, max_pass, (1, max_pass))
+    # ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: Название и логика фильтра цены
+    fare_range = st.sidebar.slider("Общая цена поездки ($)", 0.0, max_fare, (0.0, max_fare))
 else:
     st.sidebar.info("💡 **Панель фильтров скрыта.** \n\nОна доступна только на вкладке «3D Карта потоков».\n\nСейчас вы анализируете данные по всему городу целиком.")
 
