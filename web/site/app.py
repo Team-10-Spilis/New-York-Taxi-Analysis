@@ -83,22 +83,23 @@ selected_do_boroughs = st.sidebar.multiselect("Район выезда (Куда
 
 max_pass = int(data['passenger_count'].max()) if not data.empty and data['passenger_count'].max() > 0 else 1
 max_pass = max(1, max_pass)
-pass_range = st.sidebar.slider("Количество пассажиров", 0, max_pass, (0, max_pass))
+pass_range = st.sidebar.slider("Количество пассажиров", 1, max_pass, (1, max_pass))
 
-if not data.empty and data['fare_amount'].max() > 0:
-    max_fare = float(data['fare_amount'].quantile(0.99))
+if not data.empty and data['total_amount'].max() > 0:
+    max_fare = float(data['total_amount'].quantile(0.99))
 else:
     max_fare = 10.0
+
 max_fare = max(1.0, max_fare)
-fare_range = st.sidebar.slider("Пассажирский тариф ($)", 0.0, max_fare, (0.0, max_fare))
+fare_range = st.sidebar.slider("Общая цена поездки ($)", 0.0, max_fare, (0.0, max_fare))
 
 filtered_data = data[
     (data['pickup_hour'] >= hour_range[0]) & 
     (data['pickup_hour'] <= hour_range[1]) &
     (data['passenger_count'] >= pass_range[0]) & 
     (data['passenger_count'] <= pass_range[1]) &
-    (data['fare_amount'] >= fare_range[0]) & 
-    (data['fare_amount'] <= fare_range[1])
+    (data['total_amount'] >= fare_range[0]) &
+    (data['total_amount'] <= fare_range[1])
 ]
 
 if selected_pu_boroughs:
