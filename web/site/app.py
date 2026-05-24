@@ -13,7 +13,7 @@ from pathlib import Path
 import joblib
 
 # --- НАСТРОЙКИ СТРАНИЦЫ И CSS ---
-st.set_page_config(page_title="NYC Taxi Analytics 3D", layout="wide")
+st.set_page_config(page_title="NYC Taxi Analytics", layout="wide")
 
 # ИСПРАВЛЕНО 1 И 3: CSS теперь стилизует только радиокнопки навигации и явно выделяет активную вкладку!
 st.markdown("""
@@ -678,13 +678,13 @@ def feature_value(feature, values):
     if "distance_group" in lower:
         return values.get("distance_group", "medium")
     if "lag_1_demand" in lower:
-        return values.get("lag_1_demand", 1.0)
+        return values.get("lag_1_demand", 1.66)
     if "lag_24_demand" in lower:
-        return values.get("lag_24_demand", 1.0)
+        return values.get("lag_24_demand", 1.66)
     if "lag_1_revenue" in lower:
-        return values.get("lag_1_revenue", 25.0)
+        return values.get("lag_1_revenue", 50.0)
     if "lag_24_revenue" in lower:
-        return values.get("lag_24_revenue", 25.0)
+        return values.get("lag_24_revenue", 50.0)
     if lower.startswith("knn_") or "knn" in lower:
         base_price = values.get("route_average_price", values.get("global_average_price", 25.0))
         if "std" in lower or "sigma" in lower:
@@ -1170,7 +1170,7 @@ max_trips_in_data = int(agg_flows['trip_count'].max()) if not agg_flows.empty el
 
 # ИСПРАВЛЕНО 5: Снято ограничение на отображение максимума поездок 
 slider_max = max(2, max_trips_in_data) 
-default_min = 1 
+default_min = min(slider_max // 5 + 1, slider_max)
 
 if selected_tab == "🗺️ 3D Карта потоков":
     min_trips = st.sidebar.slider("Минимальное количество поездок", min_value=1, max_value=slider_max, value=default_min)
