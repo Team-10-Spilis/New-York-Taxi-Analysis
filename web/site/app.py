@@ -752,7 +752,7 @@ def render_predictor_status(predictors, loaded=False):
 
 
 def render_ml_predictions_tab(df):
-    st.markdown("### 🤖 ML-прогноз поездки")
+    st.markdown("###🤖 ML-прогноз поездки")
     st.markdown(
         "Введите параметры поездки. В этой версии вкладка не сканирует большой parquet-датасет: зоны берутся из `taxi_zones.geojson`, а модели загружаются только после нажатия кнопки прогноза."
     )
