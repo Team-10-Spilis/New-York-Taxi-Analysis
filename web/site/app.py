@@ -135,6 +135,7 @@ LOCAL_MODEL_CANDIDATES = {
         "trip_time_model.joblib",
     ],
     "price": [
+        "catboost_knn_inference_bundle.joblib",
         "catboost_price_model.joblib",
         "price_catboost_model.joblib",
         "catboost_model.joblib",
@@ -203,13 +204,26 @@ def find_model_file(task):
 def unwrap_model_object(model_object):
     if isinstance(model_object, dict):
         features = None
-        for key in ["features", "feature_names", "feature_columns", "model_features", "columns"]:
-            if key in model_object:
+        for key in [
+            "features", "feature_names", "feature_columns", "model_features", "columns",
+            "feature_cols", "input_features", "catboost_features", "final_features",
+        ]:
+            if key in model_object and model_object[key] is not None:
                 features = list(model_object[key])
                 break
-        for key in ["model", "best_model", "catboost_model", "pipeline", "estimator", "boosting_model"]:
-            if key in model_object:
-                return model_object[key], features
+
+        for key in [
+            "pipeline", "inference_pipeline", "model", "best_model", "catboost_model",
+            "catboost", "cat_model", "final_model", "estimator", "regressor", "boosting_model",
+        ]:
+            value = model_object.get(key)
+            if value is not None and hasattr(value, "predict"):
+                return value, features
+
+        for value in model_object.values():
+            if hasattr(value, "predict"):
+                return value, features
+
     if isinstance(model_object, (tuple, list)) and model_object:
         model = model_object[0]
         features = None
@@ -236,23 +250,56 @@ def load_model_from_path(path):
     return unwrap_model_object(model_object)
 
 
-def get_model_feature_names(model, saved_features=None, fallback=None):
-    if saved_features:
-        return list(saved_features)
+def get_catboost_cat_feature_indices(model):
+    if hasattr(model, "get_cat_feature_indices"):
+        try:
+            indices = list(model.get_cat_feature_indices())
+            return [int(index) for index in indices]
+        except Exception:
+            return []
+    return []
+
+
+def feature_list_is_compatible(model, features):
+    if not features:
+        return False
+    cat_indices = get_catboost_cat_feature_indices(model)
+    if cat_indices and max(cat_indices) >= len(features):
+        return False
+    return True
+
+
+def get_model_feature_names(model, saved_features=None, fallback=None, prefer_model_features=False):
+    model_features = None
     if hasattr(model, "feature_names_in_"):
-        return list(model.feature_names_in_)
-    if hasattr(model, "feature_names_"):
-        names = list(model.feature_names_)
-        if names:
-            return names
-    if hasattr(model, "get_feature_names"):
+        try:
+            model_features = list(model.feature_names_in_)
+        except Exception:
+            model_features = None
+    if not model_features and hasattr(model, "feature_names_"):
+        try:
+            names = list(model.feature_names_)
+            if names:
+                model_features = names
+        except Exception:
+            model_features = None
+    if not model_features and hasattr(model, "get_feature_names"):
         try:
             names = list(model.get_feature_names())
             if names:
-                return names
+                model_features = names
         except Exception:
-            pass
-    return list(fallback) if fallback else None
+            model_features = None
+
+    if prefer_model_features and feature_list_is_compatible(model, model_features):
+        return model_features
+    if feature_list_is_compatible(model, saved_features):
+        return list(saved_features)
+    if feature_list_is_compatible(model, model_features):
+        return model_features
+    if feature_list_is_compatible(model, fallback):
+        return list(fallback)
+    return list(model_features or saved_features or fallback or [])
 
 
 def inspect_ml_predictor_files():
@@ -286,7 +333,12 @@ def load_ml_predictors():
             model, saved_features = load_model_from_path(path)
             if task in {"demand", "revenue"} and shared_features is not None:
                 saved_features = shared_features
-            features = get_model_feature_names(model, saved_features, DEFAULT_FEATURES.get(task))
+            features = get_model_feature_names(
+                model,
+                saved_features,
+                DEFAULT_FEATURES.get(task),
+                prefer_model_features=(task == "price"),
+            )
             predictors[task] = {"model": model, "features": features, "path": path, "error": None}
         except Exception as exc:
             predictors[task] = {"model": None, "features": DEFAULT_FEATURES.get(task), "path": path, "error": str(exc)}
@@ -465,6 +517,40 @@ def feature_value(feature, values):
     }
     if lower in aliases and aliases[lower] in values:
         return values[aliases[lower]]
+    more_aliases = {
+        "gps_distance_miles": "gps_distance",
+        "dow_sin": "dayofweek_sin",
+        "dow_cos": "dayofweek_cos",
+        "pickup_dayofweek": "dayofweek",
+        "log_trip_distance": "log_trip_distance",
+        "log_duration_min": "log_duration_min",
+        "lat_diff": "lat_diff",
+        "lon_diff": "lon_diff",
+        "distance_ratio": "distance_ratio",
+        "bad_weather": "bad_weather",
+        "airport_trip": "airport_trip",
+        "same_zone": "same_zone",
+        "same_borough": "same_borough",
+        "borough_pair": "borough_pair",
+        "route_key": "route_key",
+    }
+    if lower in more_aliases and more_aliases[lower] in values:
+        return values[more_aliases[lower]]
+    if lower.startswith("te_"):
+        global_average = values.get("global_average_price", 25.0)
+        if lower.endswith("count_log"):
+            return values.get(lower, np.log1p(80.0))
+        if "puloc" in lower or "pu_loc" in lower:
+            return values.get("PU_zone_average_price", global_average)
+        if "doloc" in lower or "do_loc" in lower:
+            return values.get("DO_zone_average_price", global_average)
+        if "route" in lower:
+            return values.get("route_average_price", global_average)
+        if "ratecode" in lower:
+            return values.get("ratecode_average_price", global_average)
+        if "borough_pair" in lower:
+            return values.get("borough_pair_average_price", global_average)
+        return global_average
     if "temperature" in lower or lower == "temp":
         return values.get("temperature", 0.0)
     if "precip" in lower or "rain" in lower:
@@ -503,6 +589,27 @@ def feature_value(feature, values):
         return values.get("lag_1_revenue", 25.0)
     if "lag_24_revenue" in lower:
         return values.get("lag_24_revenue", 25.0)
+    if lower.startswith("knn_") or "knn" in lower:
+        base_price = values.get("route_average_price", values.get("global_average_price", 25.0))
+        if "std" in lower or "sigma" in lower:
+            return values.get("knn_std_total_amount", max(1.0, 0.15 * base_price))
+        if "median" in lower:
+            return values.get("knn_median_total_amount", base_price)
+        if "min" in lower:
+            return values.get("knn_min_total_amount", max(0.0, base_price * 0.65))
+        if "max" in lower:
+            return values.get("knn_max_total_amount", base_price * 1.45)
+        if "p25" in lower:
+            return values.get("knn_p25_total_amount", base_price * 0.85)
+        if "p75" in lower:
+            return values.get("knn_p75_total_amount", base_price * 1.15)
+        if "distance" in lower:
+            if "min" in lower:
+                return values.get("knn_min_distance", max(0.1, values.get("trip_distance", 1.0) * 0.75))
+            return values.get("knn_mean_distance", values.get("trip_distance", 1.0))
+        if "mean" in lower or "avg" in lower or "amount" in lower or "price" in lower:
+            return values.get("knn_mean_total_amount", base_price)
+        return base_price
     if "speed" in lower:
         return values.get("speed_mph", 0.0)
     if "same_borough" in lower:
@@ -745,6 +852,15 @@ def render_ml_predictions_tab(df):
     same_borough = int(pu_borough == do_borough)
     interborough_trip = int(not same_borough)
     price_stats = simple_price_stats(trip_distance, ratecode_id)
+    knn_price_signal = price_stats.get("route_average_price", price_stats.get("global_average_price", 25.0))
+    lat_diff = float(do_lat - pu_lat)
+    lon_diff = float(do_lon - pu_lon)
+    distance_ratio = float(trip_distance) / max(float(gps_distance), 0.1)
+    bad_weather = int(float(precipitation) > 0 or float(snowfall) > 0)
+    same_zone = int(pu_location_id == do_location_id)
+    airport_trip = int((int(pu_location_id) in PRICE_AIRPORT_ZONE_IDS) or (int(do_location_id) in PRICE_AIRPORT_ZONE_IDS))
+    borough_pair = f"{pu_borough}->{do_borough}"
+    route_key = f"{int(pu_location_id)}->{int(do_location_id)}"
 
     base_values = {
         "PULocationID": int(pu_location_id),
@@ -765,12 +881,22 @@ def render_ml_predictions_tab(df):
         "passenger_count": int(passenger_count),
         "trip_distance": float(trip_distance),
         "gps_distance": float(gps_distance),
+        "gps_distance_miles": float(gps_distance),
+        "log_trip_distance": float(np.log1p(trip_distance)),
+        "distance_ratio": distance_ratio,
+        "lat_diff": lat_diff,
+        "lon_diff": lon_diff,
+        "borough_pair": borough_pair,
+        "route_key": route_key,
         "temperature": float(temperature),
         "precipitation": float(precipitation),
         "snowfall": float(snowfall),
         "weather_code": int(weather_code),
         "pickup_airport": int(int(pu_location_id) in PRICE_AIRPORT_ZONE_IDS),
         "dropoff_airport": int(int(do_location_id) in PRICE_AIRPORT_ZONE_IDS),
+        "airport_trip": airport_trip,
+        "bad_weather": bad_weather,
+        "same_zone": same_zone,
         "same_borough": same_borough,
         "interborough_trip": interborough_trip,
         "distance_group": distance_group(float(trip_distance)),
@@ -778,6 +904,15 @@ def render_ml_predictions_tab(df):
         "lag_24_demand": float(lag_24_demand),
         "lag_1_revenue": float(lag_1_revenue),
         "lag_24_revenue": float(lag_24_revenue),
+        "knn_mean_total_amount": knn_price_signal,
+        "knn_median_total_amount": knn_price_signal,
+        "knn_std_total_amount": max(1.0, 0.15 * knn_price_signal),
+        "knn_min_total_amount": max(0.0, 0.65 * knn_price_signal),
+        "knn_max_total_amount": 1.45 * knn_price_signal,
+        "knn_p25_total_amount": 0.85 * knn_price_signal,
+        "knn_p75_total_amount": 1.15 * knn_price_signal,
+        "knn_mean_distance": float(trip_distance),
+        "knn_min_distance": max(0.1, 0.75 * float(trip_distance)),
         **price_stats,
     }
     base_values = add_time_features(base_values, pickup_datetime)
@@ -795,6 +930,7 @@ def render_ml_predictions_tab(df):
 
         base_values["duration_min"] = duration_min
         base_values["trip_duration_min"] = duration_min
+        base_values["log_duration_min"] = float(np.log1p(duration_min))
         base_values["speed_mph"] = float(trip_distance) / max(duration_min / 60.0, 1 / 60)
 
         demand_prediction, demand_error = predict_one("demand", predictors["demand"], base_values)
