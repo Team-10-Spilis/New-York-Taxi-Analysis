@@ -1,0 +1,261 @@
+date_hour,PULocationID,PU_Zone,predicted_revenue
+2025-01-01,132,JFK Airport,1372.6437982293112
+2025-01-01,138,LaGuardia Airport,718.2410075208967
+2025-01-01,142,Lincoln Square East,388.74190488535004
+2025-01-01,48,Clinton East,319.28759047680666
+2025-01-01,79,East Village,285.8604184764159
+2025-01-01,239,Upper West Side South,279.30865096674916
+2025-01-01,263,Yorkville West,228.54184545849643
+2025-01-01,68,East Chelsea,224.99340724795002
+2025-01-01,237,Upper East Side South,222.9012852373566
+2025-01-01,236,Upper East Side North,207.7313113792729
+2025-01-01,164,Midtown South,199.63458784661327
+2025-01-01,170,Murray Hill,194.67808841242265
+2025-01-01,162,Midtown East,193.93547953013714
+2025-01-01,229,Sutton Place/Turtle Bay North,192.45610154521393
+2025-01-01,234,Union Sq,190.68308094541223
+2025-01-01,148,Lower East Side,190.03161957762435
+2025-01-01,161,Midtown Center,154.68086591268792
+2025-01-01,249,West Village,149.96666196370109
+2025-01-01,114,Greenwich Village South,136.80389131268032
+2025-01-01,231,TriBeCa/Civic Center,131.84359103899965
+2025-01-01,163,Midtown North,131.03127437401133
+2025-01-01,246,West Chelsea/Hudson Yards,128.07670578421556
+2025-01-01,107,Gramercy,125.59343909662816
+2025-01-01,141,Lenox Hill West,125.10566630395694
+2025-01-01,158,Meatpacking/West Village West,115.69752652822064
+2025-01-01,113,Greenwich Village North,112.34357577601789
+2025-01-01,90,Flatiron,107.68878967002965
+2025-01-01,186,Penn Station/Madison Sq West,93.54469599322552
+2025-01-01,144,Little Italy/NoLiTa,91.25540191067346
+2025-01-01,75,East Harlem South,90.78668427589557
+2025-01-01,224,Stuy Town/Peter Cooper Village,74.66451087066403
+2025-01-01,43,Central Park,68.80236336480817
+2025-01-01,238,Upper West Side North,65.21760510829726
+2025-01-01,137,Kips Bay,62.95998915973955
+2025-01-01,244,Washington Heights South,55.4103252306587
+2025-01-01,116,Hamilton Heights,54.94063283942136
+2025-01-01,209,Seaport,50.783209299879104
+2025-01-01,88,Financial District South,50.06506280902223
+2025-01-01,143,Lincoln Square West,46.80255016266021
+2025-01-01,125,Hudson Sq,46.20362897300021
+2025-01-01,262,Yorkville East,46.155227755046795
+2025-01-01,61,Crown Heights North,34.229074029939106
+2025-01-01,188,Prospect-Lefferts Gardens,33.46000203101899
+2025-01-01,76,East New York,33.46000203101899
+2025-01-01,89,Flatbush/Ditmas Park,33.28776596435873
+2025-01-01,112,Greenpoint,33.265463804523755
+2025-01-01,95,Forest Hills,33.14554999968592
+2025-01-01,181,Park Slope,28.552240030261135
+2025-01-01,13,Battery Park City,28.07751538218208
+2025-01-01,255,Williamsburg (North Side),27.650281253404966
+2025-01-01,25,Boerum Hill,27.650281253404966
+2025-01-01,152,Manhattanville,27.650281253404966
+2025-01-01,166,Morningside Heights,27.532574500577365
+2025-01-01,42,Central Harlem North,26.642957523927613
+2025-01-01,4,Alphabet City,26.615118313540883
+2025-01-01,45,Chinatown,26.570560286731865
+2025-01-01,24,Bloomingdale,25.871127143602454
+2025-01-01,74,East Harlem North,25.755095513182216
+2025-01-01,233,UN/Turtle Bay South,23.608746955262262
+2025-01-01,50,Clinton West,22.27890778283811
+2025-01-01,87,Financial District North,0.5139634855466824
+2025-01-01,261,World Trade Center,0.013433189182535443
+2025-01-01,11,Bath Beach,0.0
+2025-01-01,12,Battery Park,0.0
+2025-01-01,9,Auburndale,0.0
+2025-01-01,10,Baisley Park,0.0
+2025-01-01,5,Arden Heights,0.0
+2025-01-01,3,Allerton/Pelham Gardens,0.0
+2025-01-01,17,Bedford,0.0
+2025-01-01,16,Bayside,0.0
+2025-01-01,15,Bay Terrace/Fort Totten,0.0
+2025-01-01,18,Bedford Park,0.0
+2025-01-01,251,Westerleigh,0.0
+2025-01-01,252,Whitestone,0.0
+2025-01-01,248,West Farms/Bronx River,0.0
+2025-01-01,247,West Concourse,0.0
+2025-01-01,254,Williamsbridge/Olinville,0.0
+2025-01-01,256,Williamsburg (South Side),0.0
+2025-01-01,258,Woodhaven,0.0
+2025-01-01,257,Windsor Terrace,0.0
+2025-01-01,259,Woodlawn/Wakefield,0.0
+2025-01-01,260,Woodside,0.0
+2025-01-01,253,Willets Point,0.0
+2025-01-01,250,Westchester Village/Unionport,0.0
+2025-01-01,69,East Concourse/Concourse Village,0.0
+2025-01-01,67,Dyker Heights,0.0
+2025-01-01,72,East Flatbush/Remsen Village,0.0
+2025-01-01,70,East Elmhurst,0.0
+2025-01-01,73,East Flushing,0.0
+2025-01-01,77,East New York/Pennsylvania Avenue,0.0
+2025-01-01,78,East Tremont,0.0
+2025-01-01,71,East Flatbush/Farragut,0.0
+2025-01-01,80,East Williamsburg,0.0
+2025-01-01,81,Eastchester,0.0
+2025-01-01,83,Elmhurst/Maspeth,0.0
+2025-01-01,82,Elmhurst,0.0
+2025-01-01,84,Eltingville/Annadale/Prince's Bay,0.0
+2025-01-01,85,Erasmus,0.0
+2025-01-01,86,Far Rockaway,0.0
+2025-01-01,91,Flatlands,0.0
+2025-01-01,92,Flushing,0.0
+2025-01-01,93,Flushing Meadows-Corona Park,0.0
+2025-01-01,94,Fordham South,0.0
+2025-01-01,96,Forest Park/Highland Park,0.0
+2025-01-01,97,Fort Greene,0.0
+2025-01-01,98,Fresh Meadows,0.0
+2025-01-01,99,Freshkills Park,0.0
+2025-01-01,100,Garment District,0.0
+2025-01-01,101,Glen Oaks,0.0
+2025-01-01,102,Glendale,0.0
+2025-01-01,105,Governor's Island/Ellis Island/Liberty Island,0.0
+2025-01-01,106,Gowanus,0.0
+2025-01-01,108,Gravesend,0.0
+2025-01-01,109,Great Kills,0.0
+2025-01-01,111,Green-Wood Cemetery,0.0
+2025-01-01,115,Grymes Hill/Clifton,0.0
+2025-01-01,117,Hammels/Arverne,0.0
+2025-01-01,51,Co-Op City,0.0
+2025-01-01,52,Cobble Hill,0.0
+2025-01-01,53,College Point,0.0
+2025-01-01,54,Columbia Street,0.0
+2025-01-01,55,Coney Island,0.0
+2025-01-01,56,Corona,0.0
+2025-01-01,57,Corona,0.0
+2025-01-01,58,Country Club,0.0
+2025-01-01,59,Crotona Park,0.0
+2025-01-01,60,Crotona Park East,0.0
+2025-01-01,62,Crown Heights South,0.0
+2025-01-01,14,Bay Ridge,0.0
+2025-01-01,6,Arrochar/Fort Wadsworth,0.0
+2025-01-01,7,Astoria,0.0
+2025-01-01,8,Astoria Park,0.0
+2025-01-01,66,DUMBO/Vinegar Hill,0.0
+2025-01-01,65,Downtown Brooklyn/MetroTech,0.0
+2025-01-01,64,Douglaston,0.0
+2025-01-01,63,Cypress Hills,0.0
+2025-01-01,122,Hollis,0.0
+2025-01-01,123,Homecrest,0.0
+2025-01-01,120,Highbridge Park,0.0
+2025-01-01,118,Heartland Village/Todt Hill,0.0
+2025-01-01,127,Inwood,0.0
+2025-01-01,128,Inwood Hill Park,0.0
+2025-01-01,129,Jackson Heights,0.0
+2025-01-01,130,Jamaica,0.0
+2025-01-01,131,Jamaica Estates,0.0
+2025-01-01,133,Kensington,0.0
+2025-01-01,124,Howard Beach,0.0
+2025-01-01,119,Highbridge,0.0
+2025-01-01,135,Kew Gardens Hills,0.0
+2025-01-01,136,Kingsbridge Heights,0.0
+2025-01-01,140,Lenox Hill East,0.0
+2025-01-01,139,Laurelton,0.0
+2025-01-01,146,Long Island City/Queens Plaza,0.0
+2025-01-01,147,Longwood,0.0
+2025-01-01,149,Madison,0.0
+2025-01-01,145,Long Island City/Hunters Point,0.0
+2025-01-01,35,Brownsville,0.0
+2025-01-01,36,Bushwick North,0.0
+2025-01-01,38,Cambria Heights,0.0
+2025-01-01,37,Bushwick South,0.0
+2025-01-01,39,Canarsie,0.0
+2025-01-01,40,Carroll Gardens,0.0
+2025-01-01,134,Kew Gardens,0.0
+2025-01-01,121,Hillcrest/Pomonok,0.0
+2025-01-01,44,Charleston/Tottenville,0.0
+2025-01-01,46,City Island,0.0
+2025-01-01,47,Claremont/Bathgate,0.0
+2025-01-01,49,Clinton Hill,0.0
+2025-01-01,150,Manhattan Beach,0.0
+2025-01-01,151,Manhattan Valley,0.0
+2025-01-01,153,Marble Hill,0.0
+2025-01-01,154,Marine Park/Floyd Bennett Field,0.0
+2025-01-01,155,Marine Park/Mill Basin,0.0
+2025-01-01,156,Mariners Harbor,0.0
+2025-01-01,157,Maspeth,0.0
+2025-01-01,159,Melrose South,0.0
+2025-01-01,160,Middle Village,0.0
+2025-01-01,165,Midwood,0.0
+2025-01-01,167,Morrisania/Melrose,0.0
+2025-01-01,168,Mott Haven/Port Morris,0.0
+2025-01-01,169,Mount Hope,0.0
+2025-01-01,171,Murray Hill-Queens,0.0
+2025-01-01,172,New Dorp/Midland Beach,0.0
+2025-01-01,173,North Corona,0.0
+2025-01-01,174,Norwood,0.0
+2025-01-01,175,Oakland Gardens,0.0
+2025-01-01,176,Oakwood,0.0
+2025-01-01,177,Ocean Hill,0.0
+2025-01-01,178,Ocean Parkway South,0.0
+2025-01-01,179,Old Astoria,0.0
+2025-01-01,180,Ozone Park,0.0
+2025-01-01,182,Parkchester,0.0
+2025-01-01,183,Pelham Bay,0.0
+2025-01-01,184,Pelham Bay Park,0.0
+2025-01-01,41,Central Harlem,0.0
+2025-01-01,126,Hunts Point,0.0
+2025-01-01,187,Port Richmond,0.0
+2025-01-01,185,Pelham Parkway,0.0
+2025-01-01,189,Prospect Heights,0.0
+2025-01-01,190,Prospect Park,0.0
+2025-01-01,193,Queensbridge/Ravenswood,0.0
+2025-01-01,194,Randalls Island,0.0
+2025-01-01,191,Queens Village,0.0
+2025-01-01,192,Queensboro Hill,0.0
+2025-01-01,197,Richmond Hill,0.0
+2025-01-01,198,Ridgewood,0.0
+2025-01-01,199,Rikers Island,0.0
+2025-01-01,200,Riverdale/North Riverdale/Fieldston,0.0
+2025-01-01,201,Rockaway Park,0.0
+2025-01-01,202,Roosevelt Island,0.0
+2025-01-01,195,Red Hook,0.0
+2025-01-01,196,Rego Park,0.0
+2025-01-01,205,Saint Albans,0.0
+2025-01-01,206,Saint George/New Brighton,0.0
+2025-01-01,207,Saint Michaels Cemetery/Woodside,0.0
+2025-01-01,208,Schuylerville/Edgewater Park,0.0
+2025-01-01,210,Sheepshead Bay,0.0
+2025-01-01,211,SoHo,0.0
+2025-01-01,212,Soundview/Bruckner,0.0
+2025-01-01,213,Soundview/Castle Hill,0.0
+2025-01-01,214,South Beach/Dongan Hills,0.0
+2025-01-01,215,South Jamaica,0.0
+2025-01-01,216,South Ozone Park,0.0
+2025-01-01,217,South Williamsburg,0.0
+2025-01-01,218,Springfield Gardens North,0.0
+2025-01-01,219,Springfield Gardens South,0.0
+2025-01-01,203,Rosedale,0.0
+2025-01-01,204,Rossville/Woodrow,0.0
+2025-01-01,221,Stapleton,0.0
+2025-01-01,220,Spuyten Duyvil/Kingsbridge,0.0
+2025-01-01,225,Stuyvesant Heights,0.0
+2025-01-01,222,Starrett City,0.0
+2025-01-01,227,Sunset Park East,0.0
+2025-01-01,228,Sunset Park West,0.0
+2025-01-01,19,Bellerose,0.0
+2025-01-01,223,Steinway,0.0
+2025-01-01,20,Belmont,0.0
+2025-01-01,21,Bensonhurst East,0.0
+2025-01-01,22,Bensonhurst West,0.0
+2025-01-01,23,Bloomfield/Emerson Hill,0.0
+2025-01-01,26,Borough Park,0.0
+2025-01-01,27,Breezy Point/Fort Tilden/Riis Beach,0.0
+2025-01-01,28,Briarwood/Jamaica Hills,0.0
+2025-01-01,226,Sunnyside,0.0
+2025-01-01,29,Brighton Beach,0.0
+2025-01-01,30,Broad Channel,0.0
+2025-01-01,32,Bronxdale,0.0
+2025-01-01,31,Bronx Park,0.0
+2025-01-01,33,Brooklyn Heights,0.0
+2025-01-01,34,Brooklyn Navy Yard,0.0
+2025-01-01,230,Times Sq/Theatre District,0.0
+2025-01-01,232,Two Bridges/Seward Park,0.0
+2025-01-01,235,University Heights/Morris Heights,0.0
+2025-01-01,240,Van Cortlandt Park,0.0
+2025-01-01,241,Van Cortlandt Village,0.0
+2025-01-01,242,Van Nest/Morris Park,0.0
+2025-01-01,243,Washington Heights North,0.0
+2025-01-01,245,West Brighton,0.0
+2025-01-01,2,Jamaica Bay,0.0
+2025-01-01,1,Newark Airport,0.0
