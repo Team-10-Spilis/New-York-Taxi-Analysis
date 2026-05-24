@@ -35,24 +35,24 @@ st.title("🚖 Анализ поездок такси в Нью-Йорке")
 @st.cache_data
 def load_data():
     used_cols = [
-        'tpep_pickup_datetime', 'total_amount', 'trip_distance',
-        'PU_Borough', 'PU_Zone', 'DO_Borough', 'DO_Zone',
+        'tpep_pickup_datetime', 'total_amount', 'trip_distance', 
+        'PU_Borough', 'PU_Zone', 'DO_Borough', 'DO_Zone', 
         'PU_lat', 'PU_lon', 'DO_lat', 'DO_lon',
         'passenger_count', 'fare_amount',
         'PULocationID', 'DOLocationID', 'VendorID', 'RatecodeID', 'payment_type',
         'temperature', 'precipitation', 'snowfall', 'weather_code'
     ]
-
+    
     # ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: Загружаем новый датасет
     df = pd.read_parquet("my_clean_3_with_weather.parquet", columns=used_cols)
     df['tpep_pickup_datetime'] = pd.to_datetime(df['tpep_pickup_datetime'])
     df['pickup_hour'] = df['tpep_pickup_datetime'].dt.hour
-    df['pickup_day_of_week'] = df['tpep_pickup_datetime'].dt.dayofweek
-
+    df['pickup_day_of_week'] = df['tpep_pickup_datetime'].dt.dayofweek 
+    
     df = df.dropna(subset=['PU_lat', 'PU_lon', 'DO_lat', 'DO_lon'])
     df = df[(df['PU_lon'] != 0) & (df['PU_lat'] != 0) & (df['DO_lon'] != 0) & (df['DO_lat'] != 0)]
-    df = df[(df['fare_amount'] >= 0) & (df['passenger_count'] >= 0)]
-
+    df = df[(df['fare_amount'] >= 0) & (df['passenger_count'] >= 0)] 
+    
     return df
 
 @st.cache_data
@@ -62,10 +62,10 @@ def load_borough_geojson():
         response = requests.get(url, timeout=15)
         geojson = response.json()
         colors = {
-            "Manhattan": [102, 194, 165, 200],
-            "Brooklyn": [252, 141, 98, 200],
-            "Queens": [141, 160, 203, 200],
-            "Bronx": [231, 138, 195, 200],
+            "Manhattan": [102, 194, 165, 200],  
+            "Brooklyn": [252, 141, 98, 200],    
+            "Queens": [141, 160, 203, 200],     
+            "Bronx": [231, 138, 195, 200],      
             "Staten Island": [166, 216, 84, 200]
         }
         for feature in geojson.get('features', []):
@@ -105,7 +105,7 @@ def colorize_geojson_with_clusters(geojson, clusters_df):
     colored_geojson = copy.deepcopy(geojson)
     for feature in colored_geojson.get("features", []):
         loc_id = str(feature.get("properties", {}).get("location_id", ""))
-        c_id = cluster_map.get(loc_id, -1)
+        c_id = cluster_map.get(loc_id, -1) 
         feature["properties"]["cluster_id"] = c_id if c_id != -1 else "Неизвестно"
         feature["properties"]["fill_color"] = cluster_colors.get(c_id, [200, 200, 200, 100])
     return colored_geojson
@@ -172,82 +172,6 @@ DEFAULT_FEATURES = {
 }
 
 PRICE_AIRPORT_ZONE_IDS = {1, 132, 138}
-
-VENDOR_ID_LABELS = {
-    "Неизвестно": 2,
-    "Creative Mobile Technologies (CMT)": 1,
-    "VeriFone / VTS": 2,
-}
-
-RATECODE_ID_LABELS = {
-    "Неизвестно": 1,
-    "Стандартный тариф": 1,
-    "Тариф JFK Airport": 2,
-    "Тариф Newark": 3,
-    "Тариф Nassau / Westchester": 4,
-    "Договорная стоимость": 5,
-    "Групповая поездка": 6,
-}
-
-PAYMENT_TYPE_LABELS = {
-    "Неизвестно": 1,
-    "Банковская карта": 1,
-    "Наличные": 2,
-    "Без оплаты": 3,
-    "Спорная оплата": 4,
-}
-
-WEATHER_CODE_LABELS = {
-    "Неизвестно": 1,
-    "Ясно": 0,
-    "Преимущественно ясно": 1,
-    "Переменная облачность": 2,
-    "Пасмурно": 3,
-    "Туман": 45,
-    "Изморозь / ледяной туман": 48,
-    "Слабая морось": 51,
-    "Морось": 53,
-    "Сильная морось": 55,
-    "Небольшой дождь": 61,
-    "Дождь": 63,
-    "Сильный дождь": 65,
-    "Небольшой снег": 71,
-    "Снег": 73,
-    "Сильный снег": 75,
-    "Ливень": 80,
-    "Сильный ливень": 82,
-    "Гроза": 95,
-}
-
-WEATHER_INPUT_DEFAULTS = {
-    "Неизвестно": (0.0, 0.0),
-    "Ясно": (0.0, 0.0),
-    "Преимущественно ясно": (0.0, 0.0),
-    "Переменная облачность": (0.0, 0.0),
-    "Пасмурно": (0.0, 0.0),
-    "Туман": (0.0, 0.0),
-    "Изморозь / ледяной туман": (0.0, 0.1),
-    "Слабая морось": (0.2, 0.0),
-    "Морось": (0.5, 0.0),
-    "Сильная морось": (1.0, 0.0),
-    "Небольшой дождь": (1.0, 0.0),
-    "Дождь": (3.0, 0.0),
-    "Сильный дождь": (8.0, 0.0),
-    "Небольшой снег": (0.2, 0.5),
-    "Снег": (0.5, 1.5),
-    "Сильный снег": (1.0, 4.0),
-    "Ливень": (5.0, 0.0),
-    "Сильный ливень": (12.0, 0.0),
-    "Гроза": (8.0, 0.0),
-}
-
-TEMPERATURE_UNKNOWN_VALUE = 15.0
-
-
-
-
-
-
 
 
 def find_model_file(task):
@@ -449,7 +373,7 @@ def build_zone_reference_from_columns(pu_ids, pu_zones, pu_boroughs, pu_lons, pu
     }).dropna(subset=["LocationID", "Zone", "Borough", "lon", "lat"]).drop_duplicates("LocationID")
     zones = pd.concat([pu, do], ignore_index=True).drop_duplicates("LocationID")
     zones["LocationID"] = zones["LocationID"].astype(int)
-    zones = zones.sort_values("LocationID").reset_index(drop=True)
+    zones = zones.sort_values(["Borough", "Zone"]).reset_index(drop=True)
     zones["label"] = zones.apply(lambda row: f"{int(row['LocationID'])} — {row['Zone']} ({row['Borough']})", axis=1)
     return zones
 
@@ -788,7 +712,7 @@ def build_zone_reference_from_geojson_cached():
         return pd.DataFrame()
 
     zones = pd.DataFrame(rows).drop_duplicates("LocationID")
-    zones = zones.sort_values("LocationID").reset_index(drop=True)
+    zones = zones.sort_values(["Borough", "Zone"]).reset_index(drop=True)
     zones["label"] = zones.apply(lambda row: f"{int(row['LocationID'])} — {row['Zone']} ({row['Borough']})", axis=1)
     return zones
 
@@ -828,6 +752,14 @@ def render_predictor_status(predictors, loaded=False):
 
 
 def render_ml_predictions_tab(df):
+    st.markdown("###🤖ML-прогноз поездки")
+    st.markdown(
+        "Введите параметры поездки. В этой версии вкладка не сканирует большой parquet-датасет: зоны берутся из `taxi_zones.geojson`, а модели загружаются только после нажатия кнопки прогноза."
+    )
+
+    predictor_files = inspect_ml_predictor_files()
+    render_predictor_status(predictor_files, loaded=False)
+
     zones = build_zone_reference_from_geojson_cached()
     use_zone_dropdowns = not zones.empty
 
@@ -840,30 +772,17 @@ def render_ml_predictions_tab(df):
         passenger_count = st.number_input("Пассажиров", min_value=1, max_value=6, value=1, step=1)
 
     if use_zone_dropdowns:
-        zones = zones.sort_values("LocationID").reset_index(drop=True)
         zone_by_label = zones.set_index("label").to_dict(orient="index")
         labels = list(zone_by_label.keys())
         default_pu = next((i for i, label in enumerate(labels) if "Midtown" in label or "Times Sq" in label), 0)
         default_do = next((i for i, label in enumerate(labels) if "JFK" in label or "Airport" in label), min(1, len(labels) - 1))
+
         col4, col5 = st.columns(2)
         with col4:
-            pu_query = st.text_input("Поиск зоны посадки", value="", key="ml_pu_zone_search")
-            pu_labels = [label for label in labels if pu_query.casefold() in label.casefold()]
-            if not pu_labels:
-                st.caption("По запросу ничего не найдено, показаны все зоны.")
-                pu_labels = labels
-            default_pu_label = labels[default_pu] if labels else None
-            pu_index = pu_labels.index(default_pu_label) if default_pu_label in pu_labels else 0
-            pu_label = st.selectbox("Зона посадки", pu_labels, index=pu_index, key="ml_pu_zone")
+            pu_label = st.selectbox("Зона посадки", labels, index=default_pu)
         with col5:
-            do_query = st.text_input("Поиск зоны высадки", value="", key="ml_do_zone_search")
-            do_labels = [label for label in labels if do_query.casefold() in label.casefold()]
-            if not do_labels:
-                st.caption("По запросу ничего не найдено, показаны все зоны.")
-                do_labels = labels
-            default_do_label = labels[default_do] if labels else None
-            do_index = do_labels.index(default_do_label) if default_do_label in do_labels else 0
-            do_label = st.selectbox("Зона высадки", do_labels, index=do_index, key="ml_do_zone")
+            do_label = st.selectbox("Зона высадки", labels, index=default_do)
+
         pu = zone_by_label[pu_label]
         do = zone_by_label[do_label]
         pu_location_id = int(pu["LocationID"])
@@ -896,33 +815,26 @@ def render_ml_predictions_tab(df):
 
     col6, col7, col8, col9 = st.columns(4)
     with col6:
-        trip_distance = min(100.0, max(0.1, round(float(gps_distance) * 1.25, 2)))
-        st.number_input("Дистанция поездки, мили", min_value=0.1, max_value=100.0, value=float(trip_distance), step=0.1, disabled=True)
+        trip_distance = st.number_input("Дистанция поездки, мили", min_value=0.1, max_value=100.0, value=max(0.1, round(gps_distance * 1.25, 2)), step=0.1)
     with col7:
-        vendor_label = st.selectbox("Поставщик таксометра", list(VENDOR_ID_LABELS.keys()), index=0)
-        vendor_id = VENDOR_ID_LABELS[vendor_label]
+        vendor_id = st.selectbox("VendorID", [1, 2], index=1)
     with col8:
-        ratecode_label = st.selectbox("Тип тарифа", list(RATECODE_ID_LABELS.keys()), index=0)
-        ratecode_id = RATECODE_ID_LABELS[ratecode_label]
+        ratecode_id = st.selectbox("RatecodeID", [1, 2, 3, 4, 5, 6], index=0)
     with col9:
-        payment_label = st.selectbox("Способ оплаты", list(PAYMENT_TYPE_LABELS.keys()), index=0)
-        payment_type = PAYMENT_TYPE_LABELS[payment_label]
+        payment_type = st.selectbox("Тип оплаты", [1, 2, 3, 4], index=0)
 
-    col10, col11 = st.columns(2)
+    col10, col11, col12, col13 = st.columns(4)
     with col10:
-        temperature_mode = st.selectbox("Температура", ["Неизвестно", "Указать вручную"], index=0)
-        if temperature_mode == "Указать вручную":
-            temperature = st.number_input("Значение температуры, °C", min_value=-30.0, max_value=50.0, value=15.0, step=0.5)
-        else:
-            temperature = TEMPERATURE_UNKNOWN_VALUE
+        temperature = st.number_input("Температура, °C", value=15.0, step=0.5)
     with col11:
-        weather_label = st.selectbox("Погода", list(WEATHER_CODE_LABELS.keys()), index=0)
-        weather_code = WEATHER_CODE_LABELS[weather_label]
-        precipitation, snowfall = WEATHER_INPUT_DEFAULTS.get(weather_label, WEATHER_INPUT_DEFAULTS["Неизвестно"])
-        precipitation = float(precipitation)
-        snowfall = float(snowfall)
+        precipitation = st.number_input("Осадки, мм", min_value=0.0, value=0.0, step=0.1)
+    with col12:
+        snowfall = st.number_input("Снег, мм", min_value=0.0, value=0.0, step=0.1)
+    with col13:
+        weather_code = st.number_input("Код погоды", min_value=0, value=1, step=1)
 
-    with st.expander("Исторические признаки для прогноза спроса и выручки"):
+    with st.expander("Дополнительные признаки для моделей спроса и выручки"):
+        st.caption("Чтобы вкладка не падала на сервере, значения по умолчанию здесь не считаются по всему parquet-файлу, а задаются вручную.")
         col14, col15, col16, col17 = st.columns(4)
         with col14:
             lag_1_demand = st.number_input("Спрос час назад", min_value=0.0, value=1.0, step=1.0)
@@ -1006,8 +918,9 @@ def render_ml_predictions_tab(df):
     base_values = add_time_features(base_values, pickup_datetime)
 
     if st.button("Получить прогноз", type="primary"):
-        with st.spinner("Считаю прогноз..."):
+        with st.spinner("Загружаю модели и считаю прогноз..."):
             predictors = load_ml_predictors()
+        render_predictor_status(predictors, loaded=True)
 
         time_prediction, time_error = predict_one("time", predictors["time"], base_values)
         if time_prediction is not None:
@@ -1051,6 +964,22 @@ def render_ml_predictions_tab(df):
             else:
                 st.metric("Выручка", f"${max(0, revenue_prediction):.2f}/час")
 
+        st.markdown("#### Входная строка для моделей")
+        shown_values = {
+            "pickup_datetime": pickup_datetime,
+            "PULocationID": pu_location_id,
+            "DOLocationID": do_location_id,
+            "PU_cluster": pu_cluster,
+            "DO_cluster": do_cluster,
+            "trip_distance": trip_distance,
+            "duration_min": duration_min,
+            "temperature": temperature,
+            "precipitation": precipitation,
+            "snowfall": snowfall,
+            "weather_code": weather_code,
+        }
+        st.dataframe(pd.DataFrame([shown_values]), width="stretch")
+
 with st.spinner("Загрузка и подготовка данных..."):
     data = load_data()
     geojson_data = load_borough_geojson()
@@ -1088,7 +1017,7 @@ if selected_tab == "🗺️ 3D Карта потоков":
     all_boroughs = sorted(data['PU_Borough'].dropna().unique())
     selected_pu_boroughs = st.sidebar.multiselect("Район выезда (Откуда)", all_boroughs, placeholder="Все районы")
     selected_do_boroughs = st.sidebar.multiselect("Район въезда (Куда)", all_boroughs, placeholder="Все районы")
-
+    
     # ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: Пассажиры от 1
     pass_range = st.sidebar.slider("Количество пассажиров", 1, max_pass, (1, max_pass))
     # ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: Название и логика фильтра цены
@@ -1098,9 +1027,9 @@ else:
 
 # Применяем фильтры к данным
 filtered_data = data[
-    (data['pickup_hour'] >= hour_range[0]) &
+    (data['pickup_hour'] >= hour_range[0]) & 
     (data['pickup_hour'] <= hour_range[1]) &
-    (data['passenger_count'] >= pass_range[0]) &
+    (data['passenger_count'] >= pass_range[0]) & 
     (data['passenger_count'] <= pass_range[1]) &
     (data['total_amount'] >= fare_range[0]) & # ИЗМЕНЕНИЕ: Фильтруем по total_amount
     (data['total_amount'] <= fare_range[1])
@@ -1116,8 +1045,8 @@ global_pu_centers = data.groupby('PU_Zone')[['PU_lon', 'PU_lat']].mean().reset_i
 global_do_centers = data.groupby('DO_Zone')[['DO_lon', 'DO_lat']].mean().reset_index()
 
 agg_flows = filtered_data.groupby(['PU_Zone', 'DO_Zone']).agg(
-    trip_count=('total_amount', 'count'),
-    avg_fare=('total_amount', 'mean'),
+    trip_count=('total_amount', 'count'),       
+    avg_fare=('total_amount', 'mean'),          
     avg_dist=('trip_distance', 'mean')
 ).reset_index()
 
@@ -1135,8 +1064,8 @@ else:
     agg_flows['line_width'] = 1
 
 max_trips_in_data = int(agg_flows['trip_count'].max()) if not agg_flows.empty else 1
-slider_max = max(2, int(max_trips_in_data / 2))
-default_min = max(1, int(max_trips_in_data * 0.05))
+slider_max = max(2, int(max_trips_in_data / 2)) 
+default_min = max(1, int(max_trips_in_data * 0.05)) 
 
 # Ползунок скрытия мелких маршрутов тоже прячем, если мы не на карте
 if selected_tab == "🗺️ 3D Карта потоков":
@@ -1159,9 +1088,9 @@ if selected_tab == "🗺️ 3D Карта потоков":
     if geojson_data:
         base_layer = pdk.Layer("GeoJsonLayer", data=geojson_data, opacity=0.8, stroked=True, filled=True, extruded=False, get_fill_color="properties.fill_color", get_line_color=[255, 255, 255, 150], pickable=False)
         layers_tab1.append(base_layer)
-
+        
     layers_tab1.append(text_layer)
-
+        
     if not map_data.empty:
         arc_layer = pdk.Layer("ArcLayer", data=map_data, get_source_position="[PU_lon, PU_lat]", get_target_position="[DO_lon, DO_lat]", get_source_color=[0, 102, 204, 255], get_target_color=[255, 128, 0, 255], get_width="line_width", auto_highlight=True, pickable=True)
         layers_tab1.append(arc_layer)
@@ -1182,21 +1111,21 @@ elif selected_tab == "🌡️ Активность (Тепловая)":
         zone_heat = filtered_data.groupby('DO_Zone').size().reset_index(name='trip_count')
         zone_heat = zone_heat.merge(global_do_centers, on='DO_Zone', how='inner')
         lon_col, lat_col, tooltip_zone = "DO_lon", "DO_lat", "DO_Zone"
-
+        
     layers_tab2 = []
     if geojson_data:
         flat_base_layer = pdk.Layer("GeoJsonLayer", data=geojson_data, opacity=0.3, stroked=True, filled=True, extruded=False, get_fill_color="properties.fill_color", get_line_color=[255, 255, 255, 100], pickable=False)
         layers_tab2.append(flat_base_layer)
-
+        
     layers_tab2.append(text_layer)
-
+        
     if not zone_heat.empty:
         max_trips_heat = zone_heat['trip_count'].max() if zone_heat['trip_count'].max() > 0 else 1
         zone_heat['color_g'] = (255 * (1 - (zone_heat['trip_count'] / max_trips_heat))).astype(int)
         heatmap_layer = pdk.Layer("HeatmapLayer", data=zone_heat, get_position=f"[{lon_col}, {lat_col}]", get_weight="trip_count", opacity=0.6, radiusPixels=40)
         scatter_layer = pdk.Layer("ScatterplotLayer", data=zone_heat, get_position=f"[{lon_col}, {lat_col}]", get_radius="trip_count", radius_scale=1500 / max_trips_heat if max_trips_heat > 0 else 1, radius_min_pixels=5, radius_max_pixels=40, get_fill_color="[255, color_g, 0, 200]", get_line_color="[255, 255, 255, 255]", pickable=True, auto_highlight=True)
         layers_tab2.extend([heatmap_layer, scatter_layer])
-
+        
     tooltip_heat = {"html": f"<b>{{{tooltip_zone}}}</b><br/><h2 style='margin:0;color:red;'>{{trip_count}}</h2><small>заказов</small>", "style": {"backgroundColor": "white", "color": "black", "padding": "10px", "borderRadius": "5px"}}
     st.pydeck_chart(pdk.Deck(layers=layers_tab2, initial_view_state=pdk.ViewState(latitude=40.71, longitude=-73.95, zoom=10, pitch=0), map_style="light", tooltip=tooltip_heat))
 
@@ -1214,7 +1143,7 @@ elif selected_tab == "📊 Бизнес-аналитика":
             top_revenue = popular_routes.sort_values('avg_fare', ascending=False).head(10)
             top_revenue['route'] = top_revenue['PU_Zone'] + " ➡️ " + top_revenue['DO_Zone']
             st.plotly_chart(px.bar(top_revenue, x='avg_fare', y='route', orientation='h', title="Самый высокий средний чек ($)", color_discrete_sequence=['#2ca02c']).update_layout(yaxis={'categoryorder':'total ascending'}), width="stretch")
-
+            
     col3, col4 = st.columns(2)
     with col3:
         days_map = {0: '1. Пн', 1: '2. Вт', 2: '3. Ср', 3: '4. Чт', 4: '5. Пт', 5: '6. Сб', 6: '7. Вс'}
@@ -1247,7 +1176,7 @@ elif selected_tab == "📊 Бизнес-аналитика":
         st.plotly_chart(px.pie(pass_df, values='Количество', names='Пассажиры', hole=0.4, title="Структура поездок по числу пассажиров"), width="stretch")
 
     with col8:
-        max_dist = min(25, filtered_data['trip_distance'].max())
+        max_dist = min(25, filtered_data['trip_distance'].max()) 
         counts, bins = np.histogram(filtered_data[(filtered_data['trip_distance'] > 0) & (filtered_data['trip_distance'] <= max_dist)]['trip_distance'], bins=25)
         bins_labels = [f"{int(bins[i])}-{int(bins[i+1])}" for i in range(len(bins)-1)]
         dist_hist_df = pd.DataFrame({'Дистанция (мили)': bins_labels, 'Количество': counts})
@@ -1262,19 +1191,19 @@ elif selected_tab == "🗄️ Данные":
 elif selected_tab == "🧩 Кластеры зон":
     st.markdown("### 🧩 Кластеризация округов (NYC Taxi Zones)")
     st.markdown("Модель машинного обучения разделила географические зоны Нью-Йорка на 8 уникальных кластеров. Каждому кластеру присвоен свой цвет.")
-
+    
     clusters_df = load_clusters()
     zones_geojson = load_taxi_zones_geojson()
-
+    
     if zones_geojson is None:
         st.error("⚠️ Не удалось загрузить геометрию мелких зон. Если официальный портал блокирует ваш IP, скачайте файл `taxi_zones.geojson` и положите его в папку с проектом.")
     else:
         colored_zones = colorize_geojson_with_clusters(zones_geojson, clusters_df)
         cluster_layer = pdk.Layer("GeoJsonLayer", data=colored_zones, opacity=0.8, stroked=True, filled=True, extruded=False, get_fill_color="properties.fill_color", get_line_color=[255, 255, 255, 100], pickable=True, auto_highlight=True)
         tooltip_cluster = {"html": "<b>Зона:</b> {zone} ({borough})<br/><b>Location ID:</b> {location_id}<hr style='margin: 5px 0; border: 0.5px solid #ccc;'/><h3 style='margin: 0; color: #ff4b4b;'>Кластер: {cluster_id}</h3>", "style": {"backgroundColor": "white", "color": "black", "padding": "10px", "borderRadius": "5px"}}
-
+        
         st.pydeck_chart(pdk.Deck(layers=[cluster_layer], initial_view_state=pdk.ViewState(latitude=40.71, longitude=-73.95, zoom=10, pitch=0), map_style="light", tooltip=tooltip_cluster))
-
+        
         st.markdown("---")
         col_c1, col_c2 = st.columns(2)
         with col_c1:
@@ -1282,7 +1211,7 @@ elif selected_tab == "🧩 Кластеры зон":
                 st.warning("⚠️ Файл `clusters.csv` не найден! Показаны случайные ДЕМО-ДАННЫЕ. **Сохраните ваш датафрейм со скриншота в файл `clusters.csv`** (с колонками PULocationID и cluster_id), чтобы увидеть реальную кластеризацию.")
             st.markdown("#### 📂 Датасет кластеров (Срез)")
             st.dataframe(clusters_df)
-
+            
         with col_c2:
             st.markdown("#### 📊 Распределение зон по кластерам")
             plot_df = clusters_df.copy()
