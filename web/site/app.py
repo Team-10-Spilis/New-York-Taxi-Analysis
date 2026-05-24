@@ -38,7 +38,7 @@ def load_data():
     ]
     
     # ИЗМЕНЕНИЕ ИЗ ВАШЕГО ФАЙЛА: Загружаем новый датасет
-    df = pd.read_parquet("data.parquet", columns=used_cols)
+    df = pd.read_parquet("my_clean_3_with_weather.parquet", columns=used_cols)
     df['tpep_pickup_datetime'] = pd.to_datetime(df['tpep_pickup_datetime'])
     df['pickup_hour'] = df['tpep_pickup_datetime'].dt.hour
     df['pickup_day_of_week'] = df['tpep_pickup_datetime'].dt.dayofweek 
